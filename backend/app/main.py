@@ -1,13 +1,14 @@
 from fastapi import FastAPI
-from app.api import health
+from app.api import health,stock
 from contextlib import asynccontextmanager
 from app.core.database import init_db
 from app.core.config import settings
-
+from app.seeders.stock_seeder import seed_stock
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Initializing database...")
     init_db()
+    seed_stock()
     print("Database initialized successfully!")
 
     yield
@@ -21,3 +22,4 @@ app = FastAPI(
 )
 
 app.include_router(health.router)
+app.include_router(stock.router)

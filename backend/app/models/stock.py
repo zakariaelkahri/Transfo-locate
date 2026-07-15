@@ -8,7 +8,6 @@ from app.core.database import Base
 
 class Stock(Base):
     __tablename__ = "STOCK"
-    __table_args__ = {"schema": "ENERGY"}
 
     stofcy: Mapped[str] = mapped_column(
         "STOFCY_0",

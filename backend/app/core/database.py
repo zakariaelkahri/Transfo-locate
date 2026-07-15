@@ -12,7 +12,7 @@ engine = create_engine(
     max_overflow=20,
 )
 
-Sessionlocal = sessionmaker(
+SessionLocal = sessionmaker(
     bind=engine,
     class_=Session,
         expire_on_commit=False,
@@ -26,7 +26,7 @@ class Base(DeclarativeBase):
 
 
 def get_db():
-    db = Sessionlocal()
+    db = SessionLocal()
     try :
         yield db
 
