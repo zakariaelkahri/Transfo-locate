@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import Input from '../components/Input'
 import Button from '../components/Button'
-import { ArticleResult, useArticleSearch } from '../features/articles'
+import { LocationResult, useItemLoc } from '../features/articles'
 
 export default function HomePage() {
   const [code, setCode] = useState('')
-  const { article, loading, error, search } = useArticleSearch()
+  const { loc, loading, error, search } = useItemLoc()
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -14,21 +14,21 @@ export default function HomePage() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Localiser un Transformateur</h1>
-      <p style={styles.subtitle}>Entrez un code article pour trouver son emplacement et son stock.</p>
+      <h1 style={styles.title}>🔍 Localiser un article</h1>
+      <p style={styles.subtitle}>Entrez la référence article pour obtenir les instructions d'emplacement.</p>
 
       <form onSubmit={handleSubmit} style={styles.form}>
         <Input
-          label="Code Article"
+          label="Référence article"
           placeholder="ex. TRF-001"
           value={code}
           onChange={(e) => setCode(e.target.value)}
         />
-        <Button loading={loading} type="submit">Rechercher</Button>
+        <Button loading={loading} type="submit">Localiser</Button>
       </form>
 
-      {error && <p style={styles.error}>{error}</p>}
-      <ArticleResult article={article} />
+      {error && <p style={styles.error}>⚠️ {error}</p>}
+      <LocationResult loc={loc} />
     </div>
   )
 }
