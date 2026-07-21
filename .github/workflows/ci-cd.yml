@@ -58,7 +58,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.USER_NAME }}
           password: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Build & push backend image
@@ -66,11 +66,11 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.USERNAME }}/transfo-locate-backend:latest
+          tags: ${{ secrets.USER_NAME }}/transfo-locate-backend:latest
 
       - name: Build & push frontend image
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
-          tags: ${{ secrets.USERNAME }}/transfo-locate-frontend:latest
+          tags: ${{ secrets.USER_NAME }}/transfo-locate-frontend:latest
