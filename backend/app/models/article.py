@@ -1,1 +1,1 @@
-from sqlalchemy.orm import DeclarativeBase
+# reserved for future article model
