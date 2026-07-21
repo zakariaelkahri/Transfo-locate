@@ -26,10 +26,6 @@ jobs:
         working-directory: backend
         run: flake8 app --max-line-length=120 --ignore=E501,W503
 
-      # - name: Run backend tests
-      #   working-directory: backend
-      #   run: pytest --tb=short -p no:cacheprovider || true
-
       - name: Set up Node
         uses: actions/setup-node@v7.0.0
         with:
