@@ -2,8 +2,9 @@
 
 body {
   font-family: system-ui, sans-serif;
-  background: #f4f6f9;
-  color: #1a1a2e;
+  background: #0b1829;
+  color: #e2e8f0;
+  min-height: 100vh;
 }
 
 a { text-decoration: none; color: inherit; }

@@ -37,7 +37,7 @@ def item_loc(item_ref: ItemRequest):
     )
 
     test = response.json()
-    print(test["$resources"])
+
     items = []
     for res in test["$resources"]:
         if res["LOCTYP"] == "ZONE1" :
