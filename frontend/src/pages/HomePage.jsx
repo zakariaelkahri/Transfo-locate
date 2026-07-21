@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>🔍 Localiser un article</h1>
-      <p style={styles.subtitle}>Entrez la référence article pour obtenir les instructions d'emplacement.</p>
+      <p style={styles.subtitle}>Entrez une référence article pour afficher toutes les lignes disponibles avec leur emplacement détaillé.</p>
 
       <form onSubmit={handleSubmit} style={styles.form}>
         <Input
@@ -34,9 +34,30 @@ export default function HomePage() {
 }
 
 const styles = {
-  container: { maxWidth: '560px', margin: '0 auto' },
-  title: { fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.5rem' },
-  subtitle: { color: '#64748b', marginBottom: '1.5rem' },
-  form: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  error: { marginTop: '1rem', color: '#dc2626' },
+  container: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '1rem',
+  },
+  title: {
+    fontSize: '1.85rem',
+    fontWeight: 800,
+    marginBottom: '0.5rem',
+    letterSpacing: '-0.02em',
+  },
+  subtitle: {
+    color: '#64748b',
+    marginBottom: '1.5rem',
+    maxWidth: '64ch',
+  },
+  form: { display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '420px' },
+  error: {
+    marginTop: '1rem',
+    color: '#b91c1c',
+    background: '#fef2f2',
+    border: '1px solid #fecaca',
+    padding: '0.75rem 1rem',
+    borderRadius: '10px',
+    maxWidth: '720px',
+  },
 }

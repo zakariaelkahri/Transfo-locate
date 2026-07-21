@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 # Create a schema for the incoming request body
-class ItemSearch(BaseModel):
+class ItemRequest(BaseModel):
     itmref: str

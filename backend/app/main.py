@@ -24,9 +24,9 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://172.19.80.1:2003", "http://localhost:2003",],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["http://172.19.80.1:2003", "http://localhost:2003", "https://localhost"],
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
 )
 app.include_router(health.router)
 app.include_router(stock.router)
