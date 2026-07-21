@@ -11,31 +11,29 @@ jobs:
     name: Code Quality
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: '3.12'
 
       - name: Install backend dependencies
         working-directory: backend
-        run: pip install --no-cache-dir -r requirements.txt
+        run: pip install --no-cache-dir -r requirements.txt flake8
 
       - name: Lint backend (flake8)
         working-directory: backend
-        run: |
-          pip install flake8
-          flake8 app --max-line-length=120 --ignore=E501,W503
+        run: flake8 app --max-line-length=120 --ignore=E501,W503
 
       - name: Run backend tests
         working-directory: backend
         run: pytest --tb=short
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install frontend dependencies
         working-directory: frontend
@@ -43,7 +41,7 @@ jobs:
 
       - name: Lint frontend (ESLint)
         working-directory: frontend
-        run: npm run lint --if-present
+        run: npm run --if-present lint
 
       - name: Build frontend
         working-directory: frontend
@@ -55,7 +53,7 @@ jobs:
     needs: quality
     if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
