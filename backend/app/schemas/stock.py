@@ -8,6 +8,6 @@ class ItemRequest(BaseModel):
 class LotRequest(BaseModel):
     lot: str
 
+
 class SloRequest(BaseModel):
     slo: str
-
