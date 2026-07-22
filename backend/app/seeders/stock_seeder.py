@@ -25,6 +25,7 @@ STOCK_DATA = [
     ("SIEGE", "AC-INSTALLATION", "EXTRN", "MARDERBSEL", Decimal("1"), "A"),
 ]
 
+
 def seed_stock():
     db = SessionLocal()
     try:
@@ -36,6 +37,3 @@ def seed_stock():
         print(f"Seeded {len(STOCK_DATA)} stock records.")
     finally:
         db.close()
-
-# if __name__ == "__main__":
-#     seed_stock()

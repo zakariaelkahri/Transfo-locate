@@ -1,0 +1,72 @@
+name: CI/CD Transfo-Locate
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install --no-cache-dir -r requirements.txt flake8
+
+      - name: Lint backend (flake8)
+        working-directory: backend
+        run: flake8 app --max-line-length=120 --ignore=E501,W503
+
+      - name: Set up Node
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: Lint frontend (ESLint)
+        working-directory: frontend
+        run: npm run --if-present lint
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+  push-docker:
+    name: Build & Push Docker Images
+    runs-on: ubuntu-latest
+    needs: quality
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USER_NAME }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Build & push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ secrets.USER_NAME }}/transfo-locate-backend:latest
+
+      - name: Build & push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.USER_NAME }}/transfo-locate-frontend:latest
