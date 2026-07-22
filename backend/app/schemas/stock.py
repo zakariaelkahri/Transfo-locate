@@ -10,3 +10,4 @@ class LotRequest(BaseModel):
 
 class SloRequest(BaseModel):
     slo: str
+
