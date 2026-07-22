@@ -17,7 +17,7 @@ services:
     build: ./backend
     env_file: .env
     # ports:
-    #   - "8000:8000"   # HTTP
+      # - "8000:8000"   # HTTP
     volumes:
       - ./backend:/app
  
