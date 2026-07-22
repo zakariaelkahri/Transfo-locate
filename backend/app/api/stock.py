@@ -61,4 +61,3 @@ def item_loc_by_lot(lot: LotRequest):
             items.append(item)
 
     return items
-
