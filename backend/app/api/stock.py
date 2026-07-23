@@ -11,7 +11,7 @@ router = APIRouter(prefix="/api/stock")
 def item_loc(item_ref: ItemRequest):
     response = requests.get(
         f"{settings.SAGE_API_URL}"
-        f"?representation=STOCK.$lookup&where=ITMREF%20eq%20%27{item_ref.itmref}%27",
+        f"?representation=STOCK.$lookup&count=1297&where=ITMREF%20eq%20%27{item_ref.itmref}%27",
         auth=(settings.SAGE_API_USER, settings.SAGE_API_PASSWORD)
     )
 
