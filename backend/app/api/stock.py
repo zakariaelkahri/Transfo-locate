@@ -39,7 +39,7 @@ def item_loc(item_ref: ItemRequest):
 def item_loc_by_lot(lot: LotRequest):
     response = requests.get(
         f"{settings.SAGE_API_URL}"
-        f"?representation=STOCK.$lookup&where=LOT%20eq%20%27{lot.lot}%27",
+        f"?representation=STOCK.$lookup&count=1297&where=LOT%20eq%20%27{lot.lot}%27",
         auth=(settings.SAGE_API_USER, settings.SAGE_API_PASSWORD)
     )
 
