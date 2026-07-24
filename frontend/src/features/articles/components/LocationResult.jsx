@@ -18,6 +18,7 @@ export default function LocationResult({ loc }) {
               <th style={s.th}>ITMREF</th>
               <th style={s.th}>LOT</th>
               <th style={s.th}>SLO</th>
+              <th style={s.th}>N° Série</th>
               <th style={s.th}>Type</th>
               <th style={s.thRight}>Qté</th>
               <th style={s.th}>Site</th>
@@ -30,6 +31,7 @@ export default function LocationResult({ loc }) {
                 <td style={s.tdStrong}>{item.ITMREF ?? '—'}</td>
                 <td style={s.td}>{item.LOT || '—'}</td>
                 <td style={s.td}>{item.SLO || '—'}</td>
+                <td style={s.td}>{item.SERNUM || '—'}</td>
                 <td style={s.td}>
                   <span style={s.typeChip}>{item.LOCTYP ?? '—'}</span>
                 </td>

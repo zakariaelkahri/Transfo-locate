@@ -9,5 +9,9 @@ class LotRequest(BaseModel):
     lot: str
 
 
+class SerieNumRequest(BaseModel):
+    sernum: str
+
+
 class SloRequest(BaseModel):
     slo: str

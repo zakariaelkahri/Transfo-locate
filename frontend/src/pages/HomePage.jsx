@@ -5,12 +5,13 @@ import { LocationResult, useItemLoc } from '../features/articles'
 const SEARCH_TYPES = [
   { value: 'itemref', label: 'Référence article', placeholder: 'ex. TRF-001' },
   { value: 'lot', label: 'Lot', placeholder: 'ex. LOT-001' },
+  { value: 'serienum', label: 'Numéro de série', placeholder: 'ex. SN-00123' },
 ]
 
 export default function HomePage() {
   const [code, setCode] = useState('')
   const [searchType, setSearchType] = useState('itemref')
-  const { loc, loading, error, search } = useItemLoc()
+  const { loc, loading, error, hasMore, search } = useItemLoc()
 
   const current = SEARCH_TYPES.find(t => t.value === searchType)
 
@@ -44,6 +45,7 @@ export default function HomePage() {
       </form>
 
       {error && <p style={styles.error}>⚠️ {error}</p>}
+      {hasMore && <p style={styles.warning}>⚠️ Résultats tronqués — il existe davantage d’articles non affichés. Affinez votre recherche pour voir tous les résultats.</p>}
       <LocationResult loc={loc} />
     </div>
   )
@@ -84,6 +86,15 @@ const styles = {
     color: '#fca5a5',
     background: 'rgba(185,28,28,0.15)',
     border: '1px solid rgba(185,28,28,0.35)',
+    padding: '0.75rem 1rem',
+    borderRadius: '10px',
+    maxWidth: '720px',
+  },
+  warning: {
+    marginTop: '1rem',
+    color: '#fde68a',
+    background: 'rgba(180,83,9,0.15)',
+    border: '1px solid rgba(180,83,9,0.4)',
     padding: '0.75rem 1rem',
     borderRadius: '10px',
     maxWidth: '720px',
