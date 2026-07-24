@@ -17,7 +17,6 @@ def item_loc(item_ref: ItemRequest):
     )
 
     final_response = response.json()
-    link_exist = final_response["$links"].get("$next", None)    
     items = []
     for res in final_response["$resources"]:
         if res["LOCTYP"] == "ZONE1":
@@ -37,7 +36,7 @@ def item_loc(item_ref: ItemRequest):
 
     out_of_range_items = pagination_check(len(items))
 
-    return items,{"pagination_existance": out_of_range_items}
+    return items, {"pagination_existance": out_of_range_items}
 
 
 @router.post("/itemLoc/lot")
@@ -49,7 +48,6 @@ def item_loc_by_lot(lot: LotRequest):
     )
 
     final_response = response.json()
-    link_exist = final_response["$links"].get("$next", None)
     items = []
     for res in final_response["$resources"]:
         if res["LOCTYP"] == "ZONE1":
@@ -69,7 +67,7 @@ def item_loc_by_lot(lot: LotRequest):
 
     out_of_range_items = pagination_check(len(items))
 
-    return items,{"pagination_existance": out_of_range_items}
+    return items, {"pagination_existance": out_of_range_items}
 
 
 @router.post("/itemLoc/serieNum")
@@ -81,7 +79,6 @@ def item_loc_by_serie_num(serie_num: SerieNumRequest):
     )
 
     final_response = response.json()
-    link_exist = final_response["$links"].get("$next", None)
     items = []
     for res in final_response["$resources"]:
         if res["LOCTYP"] == "ZONE1":
@@ -99,6 +96,6 @@ def item_loc_by_serie_num(serie_num: SerieNumRequest):
             }
             items.append(item)
 
-    out_of_range_items = pagination_check(int(len(items)))
+    out_of_range_items = pagination_check(len(items))
 
-    return items,{"pagination_existance": out_of_range_items}
+    return items, {"pagination_existance": out_of_range_items}
