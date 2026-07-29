@@ -4,10 +4,8 @@ from app.models.user import User, RoleEnum, UserStatus
 
 USERS_DATA = [
     ("admin", "admin@123", RoleEnum.ADMIN, UserStatus.ACTIVE),
-    ("john_doe", "password123", RoleEnum.USER, UserStatus.ACTIVE),
-    ("jane_smith", "password123", RoleEnum.USER, UserStatus.ACTIVE),
-    ("bob_martin", "password123", RoleEnum.USER, UserStatus.INACTIVE),
-    ("alice_dupont", "password123", RoleEnum.USER, UserStatus.SUSPENDED),
+    ("AIzakaria", "AI@123", RoleEnum.USER, UserStatus.ACTIVE),
+
 ]
 
 
