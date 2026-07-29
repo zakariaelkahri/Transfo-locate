@@ -1,7 +1,16 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import logo from '../images/logoen.png'
+import { useAuth } from '../context/AuthContext'
 
 export default function MainLayout() {
+  const { auth, logout } = useAuth()
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    logout()
+    navigate('/login')
+  }
+
   return (
     <div style={styles.wrapper}>
       <header style={styles.header}>
@@ -14,7 +23,12 @@ export default function MainLayout() {
             <span style={styles.brandSub}>LOCATE</span>
           </div>
         </div>
-        <span style={styles.badge}>⚡ Système de localisation</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={styles.badge}>⚡ Système de localisation</span>
+          {auth && (
+            <button style={styles.logoutBtn} onClick={handleLogout}>Se déconnecter</button>
+          )}
+        </div>
       </header>
       <main style={styles.main}>
         <Outlet />
@@ -78,6 +92,16 @@ const styles = {
     padding: '0.3rem 0.75rem',
     borderRadius: '999px',
     letterSpacing: '0.05em',
+  },
+  logoutBtn: {
+    padding: '0.35rem 0.9rem',
+    borderRadius: '999px',
+    border: '1px solid rgba(249,115,22,0.4)',
+    background: 'transparent',
+    color: '#f97316',
+    fontWeight: 600,
+    fontSize: '0.8rem',
+    cursor: 'pointer',
   },
   main: { flex: 1, padding: '2rem', background: 'radial-gradient(ellipse at 20% 0%, rgba(249,115,22,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(30,58,95,0.4) 0%, transparent 60%), #0b1829' },
 }
