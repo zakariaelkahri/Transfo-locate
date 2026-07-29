@@ -7,9 +7,11 @@ from uuid import UUID
 
 from app.core.database import Base
 
+
 class RoleEnum(str, enum.Enum):
     ADMIN = "admin"
     USER = "user"
+
 
 class UserStatus(str, enum.Enum):
     ACTIVE = "active"

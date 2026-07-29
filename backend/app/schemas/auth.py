@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
-from typing import Optional
-from datetime import datetime
 import uuid
+
 
 class LoginRequest(BaseModel):
     username: str = Field(..., min_length=5, max_length=50)
