@@ -3,8 +3,8 @@ from app.core.security import get_password_hash
 from app.models.user import User, RoleEnum, UserStatus
 
 USERS_DATA = [
-    ("admin", "admin@123", RoleEnum.ADMIN, UserStatus.ACTIVE),
-    ("AIzakaria", "AI@123", RoleEnum.USER, UserStatus.ACTIVE),
+    ("admin", "admin123", RoleEnum.ADMIN, UserStatus.ACTIVE),
+    ("AIzakaria", "zakariaAI123", RoleEnum.USER, UserStatus.ACTIVE),
 
 ]
 
@@ -22,6 +22,5 @@ def seed_users():
                     status=status,
                 ))
         db.commit()
-        print(f"Seeded {len(USERS_DATA)} users.")
     finally:
         db.close()
