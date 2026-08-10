@@ -15,3 +15,7 @@ class SerieNumRequest(BaseModel):
 
 class SloRequest(BaseModel):
     slo: str
+
+
+class OFRequest(BaseModel):
+    OF: str

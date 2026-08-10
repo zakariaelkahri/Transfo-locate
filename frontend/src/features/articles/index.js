@@ -1,4 +1,6 @@
 export { default as ArticleResult } from './components/ArticleResult'
 export { default as LocationResult } from './components/LocationResult'
+export { default as OFResult } from './components/OFResult'
 export { useArticleSearch } from './hooks/useArticleSearch'
 export { useItemLoc } from './hooks/useItemLoc'
+export { useOFLoc } from './hooks/useOFLoc'
