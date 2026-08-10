@@ -154,7 +154,6 @@ def get_of_mat(OF: OFRequest):
                 item_final = {
                     "No ordre": i["MFGNUM"],
                     "No ligne": i["MFGLIN"],
-                    "Article": i["ITMREF"],
                     "Quantité allouée": i["ALLQTY"],
                     "stock infos": stock_item,
                 }
