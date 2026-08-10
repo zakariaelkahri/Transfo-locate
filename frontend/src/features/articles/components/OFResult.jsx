@@ -17,7 +17,7 @@ export default function OFResult({ items }) {
             <tr>
               <th style={s.th}>N° OF</th>
               <th style={s.th}>N° Ligne</th>
-              <th style={s.th}>Article</th>
+              <th style={s.th}>Article (ITMREF)</th>
               <th style={s.thRight}>Qté allouée</th>
               <th style={s.th}>LOT</th>
               <th style={s.th}>SLO</th>
@@ -35,7 +35,7 @@ export default function OFResult({ items }) {
                 <tr key={index} style={index % 2 === 0 ? s.rowEven : s.rowOdd}>
                   <td style={s.tdStrong}>{item['No ordre'] ?? '—'}</td>
                   <td style={s.td}>{item['No ligne'] ?? '—'}</td>
-                  <td style={s.tdStrong}>{item['Article'] ?? '—'}</td>
+                  <td style={s.tdStrong}>{stock.ITMREF ?? '—'}</td>
                   <td style={s.tdRight}>{item['Quantité allouée'] ?? '—'}</td>
                   <td style={s.td}>{stock.LOT || '—'}</td>
                   <td style={s.td}>{stock.SLO || '—'}</td>
