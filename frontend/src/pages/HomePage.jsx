@@ -130,14 +130,14 @@ export default function HomePage() {
 const s = {
   layout: {
     display: 'flex',
-    gap: '1.5rem',
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '0.5rem 1rem',
+    gap: '1rem',
+    maxWidth: '100%',
+    margin: '0',
+    padding: '0.5rem 1rem 0.5rem 0',
     minHeight: 'calc(100vh - 80px)',
   },
   sidebar: {
-    width: '240px',
+    width: '200px',
     flexShrink: 0,
     display: 'flex',
     flexDirection: 'column',

@@ -21,7 +21,6 @@ export default function OFResult({ items }) {
               <th style={s.thRight}>Qté allouée</th>
               <th style={s.th}>LOT</th>
               <th style={s.th}>SLO</th>
-              <th style={s.th}>N° Série</th>
               <th style={s.th}>Statut</th>
               <th style={s.thRight}>Qté stock</th>
               <th style={s.th}>Site</th>
@@ -40,7 +39,6 @@ export default function OFResult({ items }) {
                   <td style={s.tdRight}>{item['Quantité allouée'] ?? '—'}</td>
                   <td style={s.td}>{stock.LOT || '—'}</td>
                   <td style={s.td}>{stock.SLO || '—'}</td>
-                  <td style={s.td}>{stock.SERNUM || '—'}</td>
                   <td style={s.td}>
                     {stock.STA ? <span style={s.staChip}>{stock.STA}</span> : '—'}
                   </td>

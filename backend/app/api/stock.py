@@ -145,7 +145,6 @@ def get_of_mat(OF: OFRequest):
                             "QTYSTU": res[0]["QTYSTU"],
                             "STOFCY": res[0]["STOFCY"],
                             "ITMREF": res[0]["ITMREF"],
-                            "SERNUM": res[0]["SERNUM"],
                             "STA": res[0]["STA"],
                             "LOC": loc,
                         }
