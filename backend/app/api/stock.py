@@ -104,7 +104,7 @@ def item_loc_by_serie_num(serie_num: SerieNumRequest):
 @router.post("/matloc/OF")
 def get_of_mat(OFList: OFRequest):
     of_final_mat = []
-    for of in OFList.OF :
+    for of in OFList.OF:
         mat_items = []
         response_mat = requests.get(
             f"{settings.SAGE_API_URL_MAT}"
