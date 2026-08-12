@@ -56,32 +56,62 @@ function ArticleSection() {
 }
 
 function OFSection() {
-  const [ofCode, setOfCode] = useState('')
-  const { items, loading, error, search } = useOFLoc()
+  const [ofInput, setOfInput] = useState('')
+  const [ofList, setOfList] = useState([])
+  const { groups, loading, error, search } = useOFLoc()
+
+  function addOF() {
+    const val = ofInput.trim()
+    if (val && !ofList.includes(val)) setOfList(prev => [...prev, val])
+    setOfInput('')
+  }
+
+  function removeOF(of) {
+    setOfList(prev => prev.filter(o => o !== of))
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter') { e.preventDefault(); addOF() }
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (ofCode.trim()) search(ofCode.trim())
+    const finalList = ofInput.trim()
+      ? [...ofList, ofInput.trim()].filter((v, i, a) => a.indexOf(v) === i)
+      : ofList
+    if (finalList.length === 0) return
+    setOfList(finalList)
+    setOfInput('')
+    search(finalList)
   }
 
   return (
     <div>
       <h1 style={s.title}>🏭 Matières allouées — Ordre de fabrication</h1>
-      <p style={s.subtitle}>Entrez un numéro d'OF pour localiser toutes les matières allouées.</p>
+      <p style={s.subtitle}>Ajoutez un ou plusieurs numéros d'OF puis cliquez sur Rechercher.</p>
 
       <form onSubmit={handleSubmit} style={s.form}>
         <div style={s.ofBadge}>N° OF</div>
-        <input
-          style={s.input}
-          placeholder="ex. OF-2024-001"
-          value={ofCode}
-          onChange={(e) => setOfCode(e.target.value)}
-        />
+        <div style={s.tagInputWrap}>
+          {ofList.map(of => (
+            <span key={of} style={s.tag}>
+              {of}
+              <button type="button" onClick={() => removeOF(of)} style={s.tagRemove}>×</button>
+            </span>
+          ))}
+          <input
+            style={s.tagInput}
+            placeholder={ofList.length === 0 ? 'ex. OF26Z13312' : 'Ajouter un OF...'}
+            value={ofInput}
+            onChange={(e) => setOfInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
         <Button loading={loading} type="submit">Rechercher</Button>
       </form>
 
       {error && <p style={s.error}>⚠️ {error}</p>}
-      <OFResult items={items} />
+      <OFResult groups={groups} />
     </div>
   )
 }
@@ -348,5 +378,52 @@ const s = {
     fontSize: '0.9rem',
     whiteSpace: 'nowrap',
     flexShrink: 0,
+  },
+  tagInputWrap: {
+    flex: 1,
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: '0.4rem',
+    minWidth: '160px',
+    padding: '0.4rem 0.75rem',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '8px',
+    background: 'rgba(255,255,255,0.06)',
+    cursor: 'text',
+  },
+  tag: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.35rem',
+    padding: '0.25rem 0.6rem',
+    borderRadius: '6px',
+    background: 'rgba(249,115,22,0.2)',
+    border: '1px solid rgba(249,115,22,0.4)',
+    color: '#fdba74',
+    fontSize: '0.85rem',
+    fontWeight: 600,
+    whiteSpace: 'nowrap',
+  },
+  tagRemove: {
+    background: 'none',
+    border: 'none',
+    color: '#f97316',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    lineHeight: 1,
+    padding: 0,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  tagInput: {
+    flex: 1,
+    minWidth: '120px',
+    background: 'transparent',
+    border: 'none',
+    outline: 'none',
+    color: '#f1f5f9',
+    fontSize: '1rem',
+    padding: '0.2rem 0',
   },
 }

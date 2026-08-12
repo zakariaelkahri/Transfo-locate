@@ -18,4 +18,4 @@ class SloRequest(BaseModel):
 
 
 class OFRequest(BaseModel):
-    OF: str
+    OF: list[str]
