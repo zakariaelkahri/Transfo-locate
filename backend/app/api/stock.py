@@ -140,9 +140,9 @@ def get_of_mat(OFList: OFRequest):
                         res = stock["$resources"]
                         if res[0]["LOCTYP"] == "ZONE1":
                             response_itmmaster = requests.get(
-                            f"{settings.SAGE_API_URL_ITMMASTER}"
-                            f"?representation=ITMMASTER.$lookup&count=1000&where=ITMREF%20eq%20%27{res[0]["ITMREF"]}%27",
-                            auth=(settings.SAGE_API_USER, settings.SAGE_API_PASSWORD)
+                                f"{settings.SAGE_API_URL_ITMMASTER}"
+                                f"?representation=ITMMASTER.$lookup&count=1000&where=ITMREF%20eq%20%27{res[0]['ITMREF']}%27",
+                                auth=(settings.SAGE_API_USER, settings.SAGE_API_PASSWORD)
                             )
                             item_des = response_itmmaster.json()
                             item_des_resources = item_des["$resources"]
