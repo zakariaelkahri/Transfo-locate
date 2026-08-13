@@ -26,10 +26,10 @@ function ArticleSection() {
 
   return (
     <div>
-      <h1 style={s.title}>🔍 Localiser un article</h1>
-      <p style={s.subtitle}>Entrez une référence article pour afficher toutes les lignes disponibles avec leur emplacement détaillé.</p>
+      <h1 style={s.title} className="page-title">🔍 Localiser un article</h1>
+      <p style={s.subtitle} className="page-subtitle">Entrez une référence article pour afficher toutes les lignes disponibles avec leur emplacement détaillé.</p>
 
-      <form onSubmit={handleSubmit} style={s.form}>
+      <form onSubmit={handleSubmit} style={s.form} className="search-form">
         <select
           value={searchType}
           onChange={(e) => { setSearchType(e.target.value); setCode('') }}
@@ -87,10 +87,10 @@ function OFSection() {
 
   return (
     <div>
-      <h1 style={s.title}>🏭 Matières allouées — Ordre de fabrication</h1>
-      <p style={s.subtitle}>Ajoutez un ou plusieurs numéros d'OF puis cliquez sur Rechercher.</p>
+      <h1 style={s.title} className="page-title">🏭 Matières allouées — Ordre de fabrication</h1>
+      <p style={s.subtitle} className="page-subtitle">Ajoutez un ou plusieurs numéros d'OF puis cliquez sur Rechercher.</p>
 
-      <form onSubmit={handleSubmit} style={s.form}>
+      <form onSubmit={handleSubmit} style={s.form} className="search-form">
         <div style={s.ofBadge}>N° OF</div>
         <div style={s.tagInputWrap}>
           {ofList.map(of => (
@@ -120,15 +120,15 @@ export default function HomePage() {
   const [active, setActive] = useState('article')
 
   return (
-    <div style={s.layout}>
-      <nav style={s.sidebar}>
-        <div style={s.sidebarBrand}>
+    <div style={s.layout} className="app-layout">
+      <nav style={s.sidebar} className="app-sidebar">
+        <div style={s.sidebarBrand} className="sidebar-brand">
           <span style={s.sidebarBrandIcon}>⚡</span>
           <span style={s.sidebarBrandText}>Modules</span>
         </div>
 
-        <div style={s.navGroup}>
-          <p style={s.navLabel}>Recherche</p>
+        <div style={s.navGroup} className="nav-group">
+          <p style={s.navLabel} className="nav-label">Recherche</p>
           {NAV_ITEMS.map(item => (
             <button
               key={item.key}
@@ -139,18 +139,18 @@ export default function HomePage() {
                 {item.icon}
               </span>
               <span style={s.navText}>{item.label}</span>
-              {active === item.key && <span style={s.navChevron}>›</span>}
+              {active === item.key && <span style={s.navChevron} className="nav-chevron">›</span>}
             </button>
           ))}
         </div>
 
-        <div style={s.sidebarFooter}>
+        <div style={s.sidebarFooter} className="sidebar-footer">
           <div style={s.sidebarFooterDot} />
           <span style={s.sidebarFooterText}>Transfo-Locate v1</span>
         </div>
       </nav>
 
-      <main style={s.content}>
+      <main style={s.content} className="app-content">
         {active === 'article' ? <ArticleSection /> : <OFSection />}
       </main>
     </div>

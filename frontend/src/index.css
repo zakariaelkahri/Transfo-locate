@@ -8,3 +8,60 @@ body {
 }
 
 a { text-decoration: none; color: inherit; }
+
+/* ── Responsive layout ── */
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column !important;
+    padding: 0.5rem !important;
+  }
+  .app-sidebar {
+    width: 100% !important;
+    position: static !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 0.6rem 0.85rem !important;
+    border-radius: 12px !important;
+    gap: 0.5rem !important;
+  }
+  .sidebar-brand { display: none !important; }
+  .nav-group {
+    flex-direction: row !important;
+    flex: 1 !important;
+    gap: 0.4rem !important;
+  }
+  .nav-label { display: none !important; }
+  .nav-chevron { display: none !important; }
+  .sidebar-footer { display: none !important; }
+  .app-content { padding-top: 0 !important; }
+}
+
+@media (max-width: 600px) {
+  .main-header {
+    padding: 0.6rem 1rem !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .header-badge { display: none !important; }
+  .brand-title { font-size: 1.1rem !important; }
+  .main-content { padding: 1rem !important; }
+}
+
+@media (max-width: 540px) {
+  .search-form {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .search-form select,
+  .search-form input,
+  .search-form button {
+    width: 100% !important;
+    flex-shrink: unset !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title { font-size: 1.3rem !important; }
+  .page-subtitle { font-size: 0.85rem !important; }
+}

@@ -13,24 +13,24 @@ export default function MainLayout() {
 
   return (
     <div style={styles.wrapper}>
-      <header style={styles.header}>
+      <header style={styles.header} className="main-header">
         <div style={styles.logoWrapper}>
           <div style={styles.glowRing}>
             <img src={logo} alt="Energy Transfo" style={styles.logo} />
           </div>
           <div style={styles.brandText}>
-            <span style={styles.brandTitle}>TRANSFO</span>
+            <span style={styles.brandTitle} className="brand-title">TRANSFO</span>
             <span style={styles.brandSub}>LOCATE</span>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <span style={styles.badge}>⚡ Système de localisation</span>
+          <span style={styles.badge} className="header-badge">⚡ Système de localisation</span>
           {auth && (
             <button style={styles.logoutBtn} onClick={handleLogout}>Se déconnecter</button>
           )}
         </div>
       </header>
-      <main style={styles.main}>
+      <main style={styles.main} className="main-content">
         <Outlet />
       </main>
     </div>

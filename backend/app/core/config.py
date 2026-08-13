@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     SAGE_API_URL_MAT: str
     SAGE_API_URL_STOALL: str
+    SAGE_API_URL_ITMMASTER: str
 
     # authentication settings
     SECRET_KEY: str

@@ -19,6 +19,7 @@ function OFTable({ of, items }) {
               <tr>
                 <th style={s.th}>N° Ligne</th>
                 <th style={s.th}>Article (ITMREF)</th>
+                <th style={s.th}>Désignation</th>
                 <th style={s.thRight}>Qté allouée</th>
                 <th style={s.thRight}>Qté US</th>
                 <th style={s.th}>LOT</th>
@@ -37,6 +38,7 @@ function OFTable({ of, items }) {
                   <tr key={index} style={index % 2 === 0 ? s.rowEven : s.rowOdd}>
                     <td style={s.td}>{item['No ligne'] ?? '—'}</td>
                     <td style={s.tdStrong}>{stock.ITMREF ?? '—'}</td>
+                    <td style={s.td}>{stock.ITMDES1 || '—'}</td>
                     <td style={s.tdRight}>{item['Quantité allouée'] ?? '—'}</td>
                     <td style={s.tdRight}>{item['Quantité US'] ?? '—'}</td>
                     <td style={s.td}>{stock.LOT || '—'}</td>
