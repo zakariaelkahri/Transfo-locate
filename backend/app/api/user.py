@@ -10,6 +10,7 @@ from typing import List
 
 router = APIRouter(prefix="/api/user", tags=["Authentication"])
 
+
 @router.get("/stats", response_model=UserStatsResponse)
 def get_user_stats(db: Session = Depends(get_db)):
     total = db.scalar(select(func.count()).select_from(User))
@@ -17,14 +18,17 @@ def get_user_stats(db: Session = Depends(get_db)):
     admins = db.scalar(select(func.count()).select_from(User).where(User.role == RoleEnum.ADMIN))
     return UserStatsResponse(total=total, active=active, admins=admins)
 
+
 @router.get("/list", response_model=List[UserListItem])
 def list_users(db: Session = Depends(get_db)):
     return db.execute(select(User).order_by(User.username)).scalars().all()
 
-@router.post("/create_user",
-            status_code=status.HTTP_201_CREATED,
-            response_model=AdminCreatedUserResponse,
-            )
+
+@router.post(
+    "/create_user",
+    status_code=status.HTTP_201_CREATED,
+    response_model=AdminCreatedUserResponse,
+)
 def create_user(user_data: AdminCreateUserRequest, db: Session = Depends(get_db)):
 
     existing_user_resault = db.execute(select(User).where(User.username == user_data.username))
@@ -36,8 +40,8 @@ def create_user(user_data: AdminCreateUserRequest, db: Session = Depends(get_db)
         )
 
     user = User(
-        username = user_data.username,
-        password = get_password_hash(user_data.password)
+        username=user_data.username,
+        password=get_password_hash(user_data.password)
     )
 
     db.add(user)
@@ -55,6 +59,7 @@ def create_user(user_data: AdminCreateUserRequest, db: Session = Depends(get_db)
         role=user_data.role,
         status=user.status,
     )
+
 
 @router.post("/delete", status_code=status.HTTP_200_OK)
 def delete_user(user_to_delete: DeleteUserRequest, db: Session = Depends(get_db)):

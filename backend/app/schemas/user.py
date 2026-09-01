@@ -47,5 +47,6 @@ class UserListItem(BaseModel):
     class Config:
         from_attributes = True
 
+
 class DeleteUserRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=100)
