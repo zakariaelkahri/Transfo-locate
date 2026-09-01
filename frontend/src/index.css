@@ -65,3 +65,5 @@ a { text-decoration: none; color: inherit; }
   .page-title { font-size: 1.3rem !important; }
   .page-subtitle { font-size: 0.85rem !important; }
 }
+
+@keyframes spin { to { transform: rotate(360deg); } }

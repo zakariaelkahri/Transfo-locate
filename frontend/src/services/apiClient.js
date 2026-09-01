@@ -20,4 +20,17 @@ async function request(path, options = {}) {
 export const apiClient = {
   get: (path) => request(path),
   post: (path, body) => request(path, { method: 'POST', body: JSON.stringify(body) }),
+  postRaw: async (path, body) => {
+    const res = await fetch(`/api${path}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await res.json()
+    if (!res.ok) throw { status: res.status, detail: data?.detail }
+    return data
+  },
 }

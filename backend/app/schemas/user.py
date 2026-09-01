@@ -6,7 +6,7 @@ import uuid
 class AdminCreateUserRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=100)
     password: str = Field(..., min_length=6, max_length=128)
-    role: Literal["admin", "user"]
+    role: Literal["admin", "user"] = "user"
     status: Literal["active", "inactive", "suspended"] = "active"
 
 
@@ -15,8 +15,6 @@ class AdminCreatedUserResponse(BaseModel):
     username: str
     role: str
     status: str
-    profile_id: uuid.UUID
-    created_by: uuid.UUID
 
 
 class AdminManagedUserResponse(BaseModel):
@@ -32,3 +30,22 @@ class AdminUpdateUserRequest(BaseModel):
     password: Optional[str] = Field(default=None, min_length=8, max_length=128)
     role: Optional[Literal["admin", "user"]] = None
     status: Optional[Literal["active", "inactive", "suspended"]] = None
+
+
+class UserStatsResponse(BaseModel):
+    total: int
+    active: int
+    admins: int
+
+
+class UserListItem(BaseModel):
+    id: uuid.UUID
+    username: str
+    role: str
+    status: str
+
+    class Config:
+        from_attributes = True
+
+class DeleteUserRequest(BaseModel):
+    username: str = Field(..., min_length=3, max_length=100)
