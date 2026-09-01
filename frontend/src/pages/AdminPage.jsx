@@ -243,7 +243,9 @@ export default function AdminPage() {
                   {u.status}
                 </span>
                 <span style={s.idText}>{String(u.id).slice(0, 8)}…</span>
-                <button style={s.deleteBtn} onClick={() => setDeleteTarget(u)} title="Supprimer">🗑️</button>
+                {u.role !== 'admin' && (
+                  <button style={s.deleteBtn} onClick={() => setDeleteTarget(u)} title="Supprimer">🗑️</button>
+                )}
               </div>
             ))}
           </div>
