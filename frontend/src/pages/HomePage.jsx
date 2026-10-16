@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Button from '../components/Button'
+import ExportButton from '../features/articles/components/ExportButton'
+import { articleExport, ofExport } from '../features/articles/services/resultsExport.mjs'
 import { LocationResult, useItemLoc, OFResult, useOFLoc } from '../features/articles'
 
 const SEARCH_TYPES = [
@@ -50,6 +52,9 @@ function ArticleSection() {
 
       {error && <p style={s.error}>⚠️ {error}</p>}
       {hasMore && <p style={s.warning}>⚠️ Résultats tronqués — il existe davantage d'articles non affichés. Affinez votre recherche pour voir tous les résultats.</p>}
+      {!loading && loc.length > 0 && (
+        <ExportButton getData={() => articleExport(loc)} filename="articles" />
+      )}
       <LocationResult loc={loc} />
     </div>
   )
@@ -111,6 +116,9 @@ function OFSection() {
       </form>
 
       {error && <p style={s.error}>⚠️ {error}</p>}
+      {!loading && groups.some(group => group.items.length > 0) && (
+        <ExportButton getData={() => ofExport(groups)} filename="matieres-of" />
+      )}
       <OFResult groups={groups} />
     </div>
   )
