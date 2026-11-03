@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import health, stock, auth, user
+from app.api import health, stock, auth, user, item
 from app.core.config import settings
 from contextlib import asynccontextmanager
 from app.core.database import init_db
@@ -32,3 +32,4 @@ app.include_router(health.router)
 app.include_router(stock.router)
 app.include_router(auth.router)
 app.include_router(user.router)
+app.include_router(item.router)

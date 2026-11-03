@@ -1,16 +1,21 @@
 from sqlalchemy import String, Enum as SQLEnum
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 import enum
 import uuid
 from uuid import UUID
+from typing import TYPE_CHECKING
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.item import Item
 
 
 class RoleEnum(str, enum.Enum):
     ADMIN = "admin"
     USER = "user"
+    RESP = "responsible"
 
 
 class UserStatus(str, enum.Enum):
@@ -48,3 +53,5 @@ class User(Base):
         String(255),
         nullable=False,
     )
+
+    items: Mapped[list["Item"]] = relationship(back_populates="user")

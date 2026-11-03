@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import AddItemSection from '../features/items/AddItemSection'
+import ItemsSection from '../features/items/ItemsSection'
 import Button from '../components/Button'
 import ExportButton from '../features/articles/components/ExportButton'
 import { articleExport, ofExport } from '../features/articles/services/resultsExport.mjs'
@@ -125,7 +128,18 @@ function OFSection() {
 }
 
 export default function HomePage() {
-  const [active, setActive] = useState('article')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const section = searchParams.get('section')
+  const active = ['article', 'of', 'items', 'add-item'].includes(section) ? section : 'article'
+
+  function setActive(nextSection) {
+    if (nextSection === active) return
+    setSearchParams(previous => {
+      const next = new URLSearchParams(previous)
+      next.set('section', nextSection)
+      return next
+    })
+  }
 
   return (
     <div style={s.layout} className="app-layout">
@@ -152,6 +166,28 @@ export default function HomePage() {
           ))}
         </div>
 
+        <div style={s.navGroup} className="nav-group">
+          <p style={s.navLabel} className="nav-label">Inventaire</p>
+          <button
+            type="button"
+            onClick={() => setActive('items')}
+            aria-current={active === 'items' ? 'page' : undefined}
+            style={{ ...s.navItem, ...(active === 'items' ? s.navItemActive : {}) }}
+          >
+            <span aria-hidden="true" style={{ ...s.navIconWrap, ...(active === 'items' ? s.navIconWrapActive : {}) }}>☷</span>
+            <span style={s.navText}>Liste des articles</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActive('add-item')}
+            aria-current={active === 'add-item' ? 'page' : undefined}
+            style={{ ...s.navItem, ...(active === 'add-item' ? s.navItemActive : {}) }}
+          >
+            <span aria-hidden="true" style={{ ...s.navIconWrap, ...(active === 'add-item' ? s.navIconWrapActive : {}) }}>＋</span>
+            <span style={s.navText}>Ajouter un article</span>
+          </button>
+        </div>
+
         <div style={s.sidebarFooter} className="sidebar-footer">
           <div style={s.sidebarFooterDot} />
           <span style={s.sidebarFooterText}>Transfo-Locate v1</span>
@@ -159,7 +195,10 @@ export default function HomePage() {
       </nav>
 
       <main style={s.content} className="app-content">
-        {active === 'article' ? <ArticleSection /> : <OFSection />}
+        {active === 'article' && <ArticleSection />}
+        {active === 'of' && <OFSection />}
+        {active === 'items' && <ItemsSection onAdd={() => setActive('add-item')} />}
+        <div hidden={active !== 'add-item'}><AddItemSection /></div>
       </main>
     </div>
   )
