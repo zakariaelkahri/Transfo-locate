@@ -1,7 +1,9 @@
 from datetime import date
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
+
+from app.services.item_loc import get_item_loc
 
 
 class ItemFields(BaseModel):
@@ -33,6 +35,11 @@ class ItemResponse(ItemFields):
 
     id: UUID
     user_id: UUID
+
+    @computed_field
+    @property
+    def location_details(self) -> dict[str, str]:
+        return get_item_loc(self.location)
 
 
 class ItemListResponse(BaseModel):

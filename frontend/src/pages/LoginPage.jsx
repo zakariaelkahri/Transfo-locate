@@ -21,6 +21,7 @@ export default function LoginPage() {
         body: JSON.stringify(form),
       })
       if (res.status === 401) { setError('Nom d\'utilisateur ou mot de passe incorrect.'); return }
+      if (res.status === 403) { setError('Votre compte est inactif ou suspendu. Contactez un administrateur.'); return }
       if (!res.ok) { setError('Erreur serveur, veuillez réessayer.'); return }
 
       const data = await res.json()

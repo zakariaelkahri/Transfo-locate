@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { apiClient } from '../../services/apiClient'
 import './items.css'
 
@@ -15,9 +15,18 @@ const identifierOptions = {
   mp: { maxLength: 100, placeholder: 'Référence MP' },
 }
 
-export default function AddItemSection() {
-  const [values, setValues] = useState(initialValues)
-  const [identifierType, setIdentifierType] = useState('')
+export default function AddItemSection({ itemToEdit = null, onSaved, onCancel }) {
+  const formId = useId()
+  const editing = Boolean(itemToEdit)
+  const [values, setValues] = useState(() => itemToEdit ? {
+    description: itemToEdit.description ?? '',
+    mp: itemToEdit.mp ?? '',
+    serie_number: itemToEdit.serie_number ?? '',
+    kv: itemToEdit.kv == null ? '' : String(itemToEdit.kv),
+    location: itemToEdit.location,
+    insertion_date: itemToEdit.insertion_date,
+  } : initialValues())
+  const [identifierType, setIdentifierType] = useState(itemToEdit?.serie_number ? 'serie_number' : itemToEdit?.mp ? 'mp' : '')
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(null)
@@ -75,7 +84,7 @@ export default function AddItemSection() {
     submitting.current = true
     setSaving(true)
     try {
-      const item = await apiClient.postRaw('/items', {
+      const item = await apiClient.postRaw(editing ? `/items/${itemToEdit.id}/edit` : '/items', {
         ...values,
         description: values.description.trim() || null,
         mp: values.mp.trim() || null,
@@ -83,6 +92,10 @@ export default function AddItemSection() {
         kv: identifierType !== 'serie_number' || values.kv.trim() === '' ? null : Number(values.kv),
         location: values.location,
       })
+      if (editing) {
+        onSaved?.(item)
+        return
+      }
       setSaved(item)
       setValues(initialValues())
       setIdentifierType('')
@@ -96,7 +109,7 @@ export default function AddItemSection() {
         setErrors(fieldErrors)
       }
       setMessage(error.status === 401 || error.status === 403
-        ? 'Votre session ne permet pas cet ajout. Reconnectez-vous pour continuer.'
+        ? 'Votre session ne permet pas cet enregistrement. Reconnectez-vous pour continuer.'
         : 'L’article n’a pas pu être enregistré. Vérifiez les champs et votre connexion, puis réessayez. Vos informations sont conservées.')
     } finally {
       submitting.current = false
@@ -107,24 +120,24 @@ export default function AddItemSection() {
   function field(name, { required = false, disabled = false, type = 'text', placeholder, maxLength, hint } = {}) {
     return (
       <div className="item-field">
-        <label htmlFor={`item-${name}`}>{labels[name]} {!required && <span>Facultatif</span>}</label>
-        <input id={`item-${name}`} name={name} type={type} value={values[name]}
+        <label htmlFor={`${formId}-${name}`}>{labels[name]} {!required && <span>Facultatif</span>}</label>
+        <input id={`${formId}-${name}`} name={name} type={type} value={values[name]}
           onChange={event => update(name, event.target.value)} required={required} disabled={disabled}
           placeholder={placeholder} maxLength={maxLength}
           minLength={name === 'location' ? 10 : undefined}
           pattern={name === 'location' ? '[0-9]{10}' : undefined}
           inputMode={name === 'kv' || name === 'location' ? 'numeric' : undefined}
-          aria-invalid={Boolean(errors[name])} aria-describedby={`item-${name}-help`} />
-        <small id={`item-${name}-help`} className={errors[name] ? 'item-field-error' : ''}>{errors[name] || hint}</small>
+          aria-invalid={Boolean(errors[name])} aria-describedby={`${formId}-${name}-help`} />
+        <small id={`${formId}-${name}-help`} className={errors[name] ? 'item-field-error' : ''}>{errors[name] || hint}</small>
       </div>
     )
   }
 
   return (
-    <section className="item-section" aria-labelledby="add-item-title">
-      <div className="item-eyebrow">INVENTAIRE / NOUVEL ARTICLE</div>
-      <h1 id="add-item-title">Ajouter un article</h1>
-      <p className="item-intro">Enregistrez un article et son emplacement en quelques instants.</p>
+    <section className="item-section" aria-labelledby={`${formId}-title`}>
+      <div className="item-eyebrow">INVENTAIRE / {editing ? 'MODIFIER UN ARTICLE' : 'NOUVEL ARTICLE'}</div>
+      <h1 id={`${formId}-title`}>{editing ? 'Modifier l’article' : 'Ajouter un article'}</h1>
+      <p className="item-intro">{editing ? 'Modifiez les informations puis enregistrez vos changements.' : 'Enregistrez un article et son emplacement en quelques instants.'}</p>
 
       {saved && <div className="item-success" role="status"><strong>✓ Article enregistré</strong><p>{saved.serie_number || saved.mp || 'Votre article'} a été ajouté à l’emplacement {saved.location}. Vous pouvez ajouter un autre article.</p></div>}
       {message && <div className="item-error" role="alert">{message}</div>}
@@ -134,7 +147,7 @@ export default function AddItemSection() {
           <fieldset disabled={saving}>
             <div className="item-form-section">
               <div className="item-section-heading"><span aria-hidden="true">01</span><div><h2>Identification</h2><p>Choisissez un seul identifiant : numéro de série ou MP.</p></div></div>
-              <fieldset className="item-identifier-choice" aria-describedby="identifier-choice-help">
+              <fieldset className="item-identifier-choice" aria-describedby={`${formId}-choice-help`}>
                 <legend>Type d’identifiant — obligatoire</legend>
                 <div>{identifiers.map(name => (
                   <label key={name} className={identifierType === name ? 'is-selected' : ''}>
@@ -142,7 +155,7 @@ export default function AddItemSection() {
                     {labels[name]}
                   </label>
                 ))}</div>
-                <p id="identifier-choice-help" role={errors.identifierType ? 'alert' : undefined}>
+                <p id={`${formId}-choice-help`} role={errors.identifierType ? 'alert' : undefined}>
                   {errors.identifierType || 'Choisissez un type puis renseignez sa valeur. Changer de type efface l’identifiant saisi.'}
                 </p>
               </fieldset>
@@ -165,16 +178,16 @@ export default function AddItemSection() {
                 {field('insertion_date', { required: true, type: 'date', hint: 'Date d’entrée de l’article. Obligatoire.' })}
               </div>
             </div>
-            <div className="item-actions"><p>Les champs « Facultatif » peuvent rester vides.</p><button type="submit">{saving ? 'Enregistrement…' : '＋ Enregistrer l’article'}</button></div>
+            <div className="item-actions"><p>Les champs « Facultatif » peuvent rester vides.</p>{editing && <button type="button" onClick={onCancel}>Annuler</button>}<button type="submit">{saving ? 'Enregistrement…' : editing ? 'Enregistrer les modifications' : '＋ Enregistrer l’article'}</button></div>
           </fieldset>
         </form>
 
         <aside className="item-summary" aria-label="Aperçu de l’article">
           <div className="item-summary-icon" aria-hidden="true">＋</div>
-          <h2>Votre nouvel article</h2>
+          <h2>{editing ? 'Votre article' : 'Votre nouvel article'}</h2>
           <p>Un aperçu avant l’enregistrement.</p>
           <dl>{[identifierType, 'description', 'kv', 'location', 'insertion_date'].filter(Boolean).map(name => <div key={name}><dt>{labels[name]}</dt><dd>{values[name] || '—'}</dd></div>)}</dl>
-          <p className="item-owner-note">Cet article sera associé à votre compte.</p>
+          {!editing && <p className="item-owner-note">Cet article sera associé à votre compte.</p>}
         </aside>
       </div>
     </section>

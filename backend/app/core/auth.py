@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.security import decode_access_token
-from app.models.user import User
+from app.models.user import RoleEnum, User
 
 security = HTTPBearer()
 
@@ -52,4 +52,26 @@ def get_current_active_user(
             detail="Inactive user",
         )
 
+    return current_user
+
+
+def get_current_responsible_user(
+    current_user: User = Depends(get_current_active_user),
+) -> User:
+    if current_user.role != RoleEnum.RESP:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only responsible users can create or edit items",
+        )
+    return current_user
+
+
+def get_current_admin_user(
+    current_user: User = Depends(get_current_active_user),
+) -> User:
+    if current_user.role != RoleEnum.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only admins can manage users",
+        )
     return current_user

@@ -1,11 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from app.core.auth import get_current_active_user
 from app.schemas.stock import ItemRequest, LotRequest, SerieNumRequest, OFRequest
 from app.services.item_loc import get_item_loc
 from app.services.pagination import pagination_check
 from app.core.config import settings
 import requests
 
-router = APIRouter(prefix="/api/stock")
+router = APIRouter(prefix="/api/stock", dependencies=[Depends(get_current_active_user)])
 
 
 @router.post("/itemLoc/itemRef")

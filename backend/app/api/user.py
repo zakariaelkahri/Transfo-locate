@@ -2,13 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.schemas.user import AdminCreateUserRequest, AdminCreatedUserResponse, UserStatsResponse, UserListItem, DeleteUserRequest
 from app.models.user import User, RoleEnum, UserStatus
 from app.core.database import get_db
+from app.core.auth import get_current_admin_user
 from app.core.security import get_password_hash
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from typing import List
 
 
-router = APIRouter(prefix="/api/user", tags=["Authentication"])
+router = APIRouter(
+    prefix="/api/user", tags=["Authentication"],
+    dependencies=[Depends(get_current_admin_user)],
+)
 
 
 @router.get("/stats", response_model=UserStatsResponse)
@@ -29,7 +33,11 @@ def list_users(db: Session = Depends(get_db)):
     status_code=status.HTTP_201_CREATED,
     response_model=AdminCreatedUserResponse,
 )
-def create_user(user_data: AdminCreateUserRequest, db: Session = Depends(get_db)):
+def create_user(
+    user_data: AdminCreateUserRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user),
+):
 
     existing_user_resault = db.execute(select(User).where(User.username == user_data.username))
 
@@ -41,7 +49,9 @@ def create_user(user_data: AdminCreateUserRequest, db: Session = Depends(get_db)
 
     user = User(
         username=user_data.username,
-        password=get_password_hash(user_data.password)
+        password=get_password_hash(user_data.password),
+        role=RoleEnum(user_data.role),
+        status=UserStatus(user_data.status),
     )
 
     db.add(user)
@@ -56,7 +66,7 @@ def create_user(user_data: AdminCreateUserRequest, db: Session = Depends(get_db)
     return AdminCreatedUserResponse(
         id=user.id,
         username=user.username,
-        role=user_data.role,
+        role=user.role,
         status=user.status,
     )
 

@@ -6,7 +6,7 @@ import uuid
 class AdminCreateUserRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=100)
     password: str = Field(..., min_length=6, max_length=128)
-    role: Literal["admin", "user"] = "user"
+    role: Literal["admin", "user", "responsible"] = "user"
     status: Literal["active", "inactive", "suspended"] = "active"
 
 

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { apiClient } from '../../services/apiClient'
+import { useAuth } from '../../context/AuthContext'
+import AddItemSection from './AddItemSection'
+import ItemLocation from './ItemLocation'
 import './items.css'
 import './items-list.css'
 
@@ -11,12 +14,16 @@ function formatDate(value) {
 }
 
 export default function ItemsSection({ onAdd }) {
+  const { auth } = useAuth()
+  const canManageItems = auth?.user?.role_name === 'responsible'
   const [search, setSearch] = useState('')
   const [query, setQuery] = useState({ q: '', available: '', page: 1 })
   const [reload, setReload] = useState(0)
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [editingItem, setEditingItem] = useState(null)
+  const [success, setSuccess] = useState('')
 
   useEffect(() => {
     let active = true
@@ -49,12 +56,23 @@ export default function ItemsSection({ onAdd }) {
     setQuery({ q: '', available: '', page: 1 })
   }
 
+  if (editingItem && canManageItems) {
+    return <AddItemSection key={editingItem.id} itemToEdit={editingItem}
+      onCancel={() => setEditingItem(null)}
+      onSaved={() => {
+        setEditingItem(null)
+        setSuccess('Les modifications ont été enregistrées.')
+        setLoading(true)
+        setReload(previous => previous + 1)
+      }} />
+  }
+
   return (
     <section className="item-section inventory" aria-labelledby="inventory-title">
       <div className="item-eyebrow">INVENTAIRE / ARTICLES</div>
       <div className="inventory-heading">
         <div><h1 id="inventory-title">Liste des articles</h1><p className="item-intro">Retrouvez les articles enregistrés, leur emplacement et leur disponibilité.</p></div>
-        <button type="button" className="inventory-primary" onClick={onAdd}>＋ Ajouter un article</button>
+        {canManageItems && <button type="button" className="inventory-primary" onClick={onAdd}>＋ Ajouter un article</button>}
       </div>
 
       <form className="inventory-toolbar" onSubmit={event => { event.preventDefault(); setQuery(previous => ({ ...previous, q: search.trim(), page: 1 })) }}>
@@ -64,16 +82,18 @@ export default function ItemsSection({ onAdd }) {
       </form>
       {filtered && <div className="inventory-filter-note"><span>Filtres actifs{query.q && ` · « ${query.q} »`}</span><button type="button" onClick={resetFilters}>Effacer les filtres</button></div>}
 
+      {success && <div className="item-success" role="status">{success}</div>}
       <div className="inventory-panel" aria-busy={loading}>
         {loading ? <div className="inventory-state" role="status"><span className="inventory-spinner" aria-hidden="true" /><h2>Chargement des articles…</h2><p>Récupération de votre inventaire.</p></div>
           : error ? <div className="inventory-state" role="alert"><h2>Chargement impossible</h2><p>{error}</p><button type="button" onClick={() => setReload(previous => previous + 1)}>Réessayer</button></div>
-            : data?.items.length === 0 ? <div className="inventory-state"><span className="inventory-empty-icon" aria-hidden="true">☷</span><h2>{filtered ? 'Aucun article trouvé' : 'Votre inventaire commence ici'}</h2><p>{filtered ? 'Essayez une autre référence ou effacez les filtres.' : 'Ajoutez votre premier article pour retrouver ici ses informations.'}</p><button type="button" onClick={filtered ? resetFilters : onAdd}>{filtered ? 'Effacer les filtres' : '＋ Ajouter un article'}</button></div>
+            : data?.items.length === 0 ? <div className="inventory-state"><span className="inventory-empty-icon" aria-hidden="true">☷</span><h2>{filtered ? 'Aucun article trouvé' : 'Votre inventaire commence ici'}</h2><p>{filtered ? 'Essayez une autre référence ou effacez les filtres.' : 'Les articles enregistrés apparaîtront ici.'}</p>{(filtered || canManageItems) && <button type="button" onClick={filtered ? resetFilters : onAdd}>{filtered ? 'Effacer les filtres' : '＋ Ajouter un article'}</button>}</div>
               : data && <>
                 <div className="inventory-table-heading"><h2>{data.total} article{data.total !== 1 ? 's' : ''}{filtered ? ' trouvé(s)' : ''}</h2><span>Date d’entrée décroissante</span></div>
                 <div className="inventory-table-scroll" tabIndex={0} role="region" aria-label="Tableau des articles, défilement horizontal disponible">
-                  <table><caption className="inventory-sr-only">Articles enregistrés et leurs emplacements</caption><thead><tr><th scope="col">N° de série</th><th scope="col">Description</th><th scope="col">MP</th><th scope="col">Tension</th><th scope="col">Emplacement</th><th scope="col">Date d’entrée</th><th scope="col">Statut</th></tr></thead>
+                  <table><caption className="inventory-sr-only">Articles enregistrés et leurs emplacements</caption><thead><tr><th scope="col">N° de série</th><th scope="col">Description</th><th scope="col">MP</th><th scope="col">Tension</th><th scope="col">Emplacement</th><th scope="col">Date d’entrée</th><th scope="col">Statut</th>{canManageItems && <th scope="col">Action</th>}</tr></thead>
                     <tbody>{data.items.map(item => <tr key={item.id}>
-                      <th scope="row">{item.serie_number || '—'}</th><td>{item.description || '—'}</td><td>{item.mp || '—'}</td><td className="inventory-nowrap">{item.kv == null ? '—' : `${item.kv} kV`}</td><td><span className="inventory-location">{item.location}</span></td><td className="inventory-nowrap">{formatDate(item.insertion_date)}</td><td><span className={`inventory-badge ${item.availlable ? 'is-available' : ''}`}>{item.availlable ? '● Disponible' : '○ Indisponible'}</span></td>
+                      <th scope="row">{item.serie_number || '—'}</th><td>{item.description || '—'}</td><td>{item.mp || '—'}</td><td className="inventory-nowrap">{item.kv == null ? '—' : `${item.kv} kV`}</td><td className="inventory-location-cell"><ItemLocation code={item.location} details={item.location_details} /></td><td className="inventory-nowrap">{formatDate(item.insertion_date)}</td><td><span className={`inventory-badge ${item.availlable ? 'is-available' : ''}`}>{item.availlable ? '● Disponible' : '○ Indisponible'}</span></td>
+                      {canManageItems && <td><button type="button" onClick={() => { setSuccess(''); setEditingItem(item) }} aria-label={`Modifier ${item.serie_number || item.mp || 'cet article'}`}>Modifier</button></td>}
                     </tr>)}</tbody>
                   </table>
                 </div>

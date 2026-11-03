@@ -1,0 +1,31 @@
+.create-user-select {
+  width: 100%;
+  min-height: 46px;
+  padding: .7rem .8rem;
+  border: 1px solid #71839a;
+  border-radius: 10px;
+  background: #0b1829;
+  color: #f8fafc;
+  color-scheme: dark;
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.create-user-select option {
+  background: #0b1829;
+  color: #f8fafc;
+  font-weight: 500;
+}
+.create-user-select:hover { border-color: #cbd5e1; }
+.create-user-select:focus-visible { outline: 2px solid #fb923c; outline-offset: 3px; }
+.create-user-choice-help {
+  color: #cbd5e1;
+  font-size: .76rem;
+  line-height: 1.6;
+  margin-top: .6rem;
+}
+.create-user-choices > div { min-width: 0; }
+@media (max-width: 480px) {
+  .create-user-choices { grid-template-columns: 1fr !important; }
+}

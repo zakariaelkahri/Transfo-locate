@@ -2,9 +2,22 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { apiClient } from '../services/apiClient'
+import './admin-form.css'
 
-const ROLES = ['user', 'admin']
+const ROLES = ['user', 'responsible', 'admin']
+const ROLE_LABELS = { user: 'Utilisateur', responsible: 'Responsable', admin: 'Administrateur' }
+const ROLE_HELP = {
+  user: 'Consulte les articles. Ne peut ni les créer ni les modifier.',
+  responsible: 'Consulte, crée et modifie les articles.',
+  admin: 'Gère les comptes et leurs rôles. Consulte les articles sans les modifier.',
+}
 const STATUSES = ['active', 'inactive', 'suspended']
+const STATUS_LABELS = { active: 'Actif', inactive: 'Inactif', suspended: 'Suspendu' }
+const STATUS_HELP = {
+  active: 'L’utilisateur peut se connecter et accéder à ses fonctionnalités.',
+  inactive: 'Le compte est désactivé. La connexion est bloquée.',
+  suspended: 'L’accès au compte est suspendu. La connexion est bloquée.',
+}
 const STATUS_COLOR = { active: '#22c55e', inactive: '#94a3b8', suspended: '#ef4444' }
 
 /* ── Create User Modal ── */
@@ -66,18 +79,20 @@ function CreateUserModal({ onClose, onCreated }) {
             </button>
           </div>
 
-          <div style={m.row}>
+          <div style={m.row} className="create-user-choices">
             <div style={{ flex: 1 }}>
-              <label style={m.label}>Rôle</label>
-              <select name="role" value={form.role} onChange={handleChange} style={m.select}>
-                {ROLES.map(r => <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>)}
+              <label htmlFor="create-user-role" style={m.label}>Rôle</label>
+              <select id="create-user-role" name="role" value={form.role} onChange={handleChange} className="create-user-select" aria-describedby="create-user-role-help">
+                {ROLES.map(r => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}
               </select>
+              <p id="create-user-role-help" className="create-user-choice-help">{ROLE_HELP[form.role]}</p>
             </div>
             <div style={{ flex: 1 }}>
-              <label style={m.label}>Statut</label>
-              <select name="status" value={form.status} onChange={handleChange} style={m.select}>
-                {STATUSES.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+              <label htmlFor="create-user-status" style={m.label}>Statut du compte</label>
+              <select id="create-user-status" name="status" value={form.status} onChange={handleChange} className="create-user-select" aria-describedby="create-user-status-help">
+                {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
               </select>
+              <p id="create-user-status-help" className="create-user-choice-help">{STATUS_HELP[form.status]}</p>
             </div>
           </div>
 
@@ -196,6 +211,7 @@ export default function AdminPage() {
           <div style={s.pageTitle}>🛠️ Tableau de bord Admin</div>
           <div style={s.pageSub}>Bienvenue, <strong style={{ color: '#f97316' }}>{auth?.user?.username}</strong></div>
         </div>
+        <button style={s.logoutBtn} onClick={() => navigate('/?section=items')}>Voir les articles</button>
         <button style={s.logoutBtn} onClick={handleLogout}>Se déconnecter</button>
       </div>
 

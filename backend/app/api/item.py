@@ -1,14 +1,37 @@
-from fastapi import APIRouter, Depends, Query, status
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
-from app.core.auth import get_current_active_user
+from app.core.auth import get_current_active_user, get_current_responsible_user
 from app.core.database import get_db
 from app.models.item import Item
 from app.models.user import User
 from app.schemas.item import ItemCreate, ItemListResponse, ItemResponse
 
 router = APIRouter(prefix="/api/items", tags=["Items"])
+
+
+@router.post("/{item_id}/edit", response_model=ItemResponse)
+def edit_item(
+    item_id: UUID,
+    data: ItemCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_responsible_user),
+):
+    item = db.get(Item, item_id)
+    if item is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
+    for name, value in data.model_dump(exclude={"availlable"}).items():
+        setattr(item, name, value)
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    db.refresh(item)
+    return item
 
 
 @router.get("", response_model=ItemListResponse)
@@ -43,7 +66,7 @@ def list_items(
 def create_item(
     data: ItemCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_responsible_user),
 ):
     item = Item(**data.model_dump(), user_id=current_user.id)
     db.add(item)

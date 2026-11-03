@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 import { useSearchParams } from 'react-router-dom'
 import AddItemSection from '../features/items/AddItemSection'
 import ItemsSection from '../features/items/ItemsSection'
@@ -128,9 +129,13 @@ function OFSection() {
 }
 
 export default function HomePage() {
+  const { auth } = useAuth()
+  const canManageItems = auth?.user?.role_name === 'responsible'
   const [searchParams, setSearchParams] = useSearchParams()
   const section = searchParams.get('section')
-  const active = ['article', 'of', 'items', 'add-item'].includes(section) ? section : 'article'
+  const active = section === 'add-item' && !canManageItems
+    ? 'items'
+    : ['article', 'of', 'items', 'add-item'].includes(section) ? section : 'article'
 
   function setActive(nextSection) {
     if (nextSection === active) return
@@ -177,7 +182,7 @@ export default function HomePage() {
             <span aria-hidden="true" style={{ ...s.navIconWrap, ...(active === 'items' ? s.navIconWrapActive : {}) }}>☷</span>
             <span style={s.navText}>Liste des articles</span>
           </button>
-          <button
+          {canManageItems && <button
             type="button"
             onClick={() => setActive('add-item')}
             aria-current={active === 'add-item' ? 'page' : undefined}
@@ -185,7 +190,7 @@ export default function HomePage() {
           >
             <span aria-hidden="true" style={{ ...s.navIconWrap, ...(active === 'add-item' ? s.navIconWrapActive : {}) }}>＋</span>
             <span style={s.navText}>Ajouter un article</span>
-          </button>
+          </button>}
         </div>
 
         <div style={s.sidebarFooter} className="sidebar-footer">
@@ -198,7 +203,7 @@ export default function HomePage() {
         {active === 'article' && <ArticleSection />}
         {active === 'of' && <OFSection />}
         {active === 'items' && <ItemsSection onAdd={() => setActive('add-item')} />}
-        <div hidden={active !== 'add-item'}><AddItemSection /></div>
+        {canManageItems && <div hidden={active !== 'add-item'}><AddItemSection /></div>}
       </main>
     </div>
   )
