@@ -25,6 +25,7 @@ export default function AddItemSection({ itemToEdit = null, onSaved, onCancel })
     kv: itemToEdit.kv == null ? '' : String(itemToEdit.kv),
     location: itemToEdit.location,
     insertion_date: itemToEdit.insertion_date,
+    availlable: itemToEdit.availlable,
   } : initialValues())
   const [identifierType, setIdentifierType] = useState(itemToEdit?.serie_number ? 'serie_number' : itemToEdit?.mp ? 'mp' : '')
   const [errors, setErrors] = useState({})
@@ -177,6 +178,16 @@ export default function AddItemSection({ itemToEdit = null, onSaved, onCancel })
                 {field('location', { required: true, maxLength: 10, placeholder: 'Ex. 0106100810', hint: 'Exactement 10 chiffres, zéros initiaux inclus. Obligatoire.' })}
                 {field('insertion_date', { required: true, type: 'date', hint: 'Date d’entrée de l’article. Obligatoire.' })}
               </div>
+              {editing && <div className="item-edit-availability">
+                <label htmlFor={`${formId}-availability`}>Disponibilité</label>
+                <select id={`${formId}-availability`} name="availlable" value={String(values.availlable)}
+                  onChange={event => update('availlable', event.target.value === 'true')}
+                  aria-describedby={`${formId}-availability-help`}>
+                  <option value="true">Disponible</option>
+                  <option value="false">Indisponible</option>
+                </select>
+                <p id={`${formId}-availability-help`}>Le statut sera mis à jour après l’enregistrement.</p>
+              </div>}
             </div>
             <div className="item-actions"><p>Les champs « Facultatif » peuvent rester vides.</p>{editing && <button type="button" onClick={onCancel}>Annuler</button>}<button type="submit">{saving ? 'Enregistrement…' : editing ? 'Enregistrer les modifications' : '＋ Enregistrer l’article'}</button></div>
           </fieldset>
@@ -187,6 +198,7 @@ export default function AddItemSection({ itemToEdit = null, onSaved, onCancel })
           <h2>{editing ? 'Votre article' : 'Votre nouvel article'}</h2>
           <p>Un aperçu avant l’enregistrement.</p>
           <dl>{[identifierType, 'description', 'kv', 'location', 'insertion_date'].filter(Boolean).map(name => <div key={name}><dt>{labels[name]}</dt><dd>{values[name] || '—'}</dd></div>)}</dl>
+          {editing && <p>Statut : {values.availlable ? 'Disponible' : 'Indisponible'}</p>}
           {!editing && <p className="item-owner-note">Cet article sera associé à votre compte.</p>}
         </aside>
       </div>

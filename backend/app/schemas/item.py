@@ -30,6 +30,10 @@ class ItemCreate(ItemFields):
         return self
 
 
+class ItemUpdate(ItemCreate):
+    availlable: bool = Field(...)
+
+
 class ItemResponse(ItemFields):
     model_config = ConfigDict(from_attributes=True)
 

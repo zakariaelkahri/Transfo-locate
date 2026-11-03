@@ -31,6 +31,11 @@
 .item-field input[aria-invalid="true"] { border-color: #f87171; }
 .item-field small { display: block; color: #94a3b8; line-height: 1.5; font-size: .72rem; margin-top: .45rem; }
 .item-field small.item-field-error { color: #fca5a5; }
+.item-edit-availability { margin-top: 1.3rem; }
+.item-edit-availability label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: .55rem; }
+.item-edit-availability select { width: 100%; min-height: 46px; padding: .7rem .85rem; border: 1px solid #3a4d65; border-radius: 9px; background: #0c1b2e; color: #f1f5f9; color-scheme: dark; font: inherit; font-size: .9rem; }
+.item-edit-availability select:focus-visible { outline: 2px solid #fb923c; outline-offset: 3px; }
+.item-edit-availability p { color: #94a3b8; font-size: .72rem; line-height: 1.5; margin-top: .45rem; }
 .item-actions { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.2rem 1.6rem; border-top: 1px solid #293c54; background: #0d1d31; }
 .item-actions p { color: #94a3b8; font-size: .72rem; max-width: 24ch; line-height: 1.6; }
 .item-actions button { padding: .85rem 1.1rem; background: #fb923c; color: #172033; border: 0; border-radius: 9px; font: inherit; font-size: .85rem; font-weight: 750; cursor: pointer; }
